@@ -1,0 +1,20 @@
+# ── LLAVES ── nunca suben
+data/api_tennis_key.txt
+.env
+.env.*
+*.key
+
+# ── DATOS ── 525 MB de bases y descargas en crudo.
+# No se publican por tamaño, y porque son datos de terceros (Sportradar,
+# API-Tennis) cuyas licencias no permiten redistribuirlos. El código que los
+# descarga sí está en src/ingestion, así que el trabajo es reproducible.
+data/
+models/
+
+# ── PYTHON ──
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
