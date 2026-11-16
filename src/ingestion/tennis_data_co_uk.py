@@ -20,7 +20,15 @@ YEARS = range(2010, 2027)
 
 def download_year(year: int) -> pd.DataFrame | None:
     """Try to download a year's worth of ATP matches + odds."""
+    # tennis-data.co.uk movió sus archivos detrás de una carpeta con nombre
+    # ofuscado. Las rutas directas /AÑO/AÑO.xlsx empezaron a dar 404 en algún
+    # momento de 2026 y por eso la descarga dejó de traer datos nuevos sin
+    # avisar: el pipeline seguía corriendo y la base se quedó congelada en
+    # marzo. La ruta de abajo se sacó del HTML de su propia página de
+    # descargas, y va PRIMERO para que sea la que se use.
+    CARPETA = "hrjk-85HytOjkhth76j_ygh4jf7"
     urls_to_try = [
+        f"{BASE_URL}/{CARPETA}/{year}/{year}.xlsx",
         f"{BASE_URL}/{year}/{year}.zip",
         f"{BASE_URL}/{year}/{year}.xlsx",
         f"{BASE_URL}/{year}/atp_{year}.xlsx",
@@ -94,7 +102,14 @@ ODDS_COLUMN_MAP = {
     "Date": "match_date",
     "Tournament": "tourney_name",
     "Series": "tourney_level",
-    "Court": "surface",
+    # OJO: tennis-data.co.uk trae DOS columnas parecidas. "Court" dice si la
+    # cancha es techada o al aire libre (Indoor/Outdoor); "Surface" dice el
+    # material (Hard/Clay/Grass), que es lo que importa para el Elo por
+    # superficie. Estaba tomando "Court", así que todos los partidos entraban
+    # con superficie "Outdoor" y el Elo por superficie nunca se separaba: se
+    # quedaba en el valor inicial de 1500 para todo el mundo.
+    "Surface": "surface",
+    "Court": "court_type",
     "Round": "round",
     "Winner": "winner_name",
     "Loser": "loser_name",

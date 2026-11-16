@@ -41,8 +41,12 @@ st.set_page_config(page_title="Predicción de partidos de tenis",
 # Cifras del modelo. Salen de la evaluación real de los .pkl entrenados, no
 # están puestas a mano: si se reentrena, hay que actualizarlas acá.
 # ─────────────────────────────────────────────────────────────────────────
+# El MODELO se entrenó con 832.242 partidos históricos; esa cifra no cambia.
+# El ESTADO DE LOS JUGADORES —Elo, forma, descanso— se reconstruye aparte y
+# es lo que hay que mantener al día: con un estado viejo, el modelo predice
+# bien pero sobre jugadores que ya no están en ese nivel.
 ATP = {"precision": 67.65, "auc": 0.742, "partidos": 832242,
-       "entrenamiento": 269109, "variables": 59, "jugadores": 25810,
+       "entrenamiento": 269109, "variables": 59, "jugadores": 988,
        "periodo": "1991 – 2026"}
 WTA = {"precision": 61.36, "auc": 0.677, "partidos": 530000,
        "entrenamiento": 71757, "variables": 52, "jugadores": 20806,
@@ -97,6 +101,14 @@ if pagina == "Rendimiento del modelo":
         c2[1].metric("Jugadores con estado", f"{d['jugadores']:,}".replace(",", "."))
         c2[2].metric("Periodo cubierto", d["periodo"])
         st.write("")
+
+    st.info(
+        "**Estado de los jugadores actualizado al 14 de noviembre de 2026.** "
+        "El modelo está entrenado con 832.242 partidos históricos; el Elo, la "
+        "forma y el descanso de cada jugador se recalculan aparte con los "
+        "resultados del circuito principal, para que la predicción use el "
+        "nivel actual y no el de hace meses."
+    )
 
     st.markdown("---")
     st.markdown("### Cómo leer estos números")
